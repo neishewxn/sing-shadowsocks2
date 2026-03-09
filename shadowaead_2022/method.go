@@ -14,8 +14,8 @@ import (
 	"strings"
 	"time"
 
-	C "github.com/metacubex/sing-shadowsocks2/cipher"
-	"github.com/metacubex/sing-shadowsocks2/internal/shadowio"
+	C "github.com/neishewxn/sing-shadowsocks2/cipher"
+	"github.com/neishewxn/sing-shadowsocks2/internal/shadowio"
 	"github.com/metacubex/sing/common"
 	"github.com/metacubex/sing/common/buf"
 	"github.com/metacubex/sing/common/bufio"

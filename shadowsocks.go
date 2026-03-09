@@ -1,10 +1,10 @@
 package shadowsocks
 
 import (
-	C "github.com/metacubex/sing-shadowsocks2/cipher"
-	_ "github.com/metacubex/sing-shadowsocks2/shadowaead"
-	_ "github.com/metacubex/sing-shadowsocks2/shadowaead_2022"
-	_ "github.com/metacubex/sing-shadowsocks2/shadowstream"
+	C "github.com/neishewxn/sing-shadowsocks2/cipher"
+	_ "github.com/neishewxn/sing-shadowsocks2/shadowaead"
+	_ "github.com/neishewxn/sing-shadowsocks2/shadowaead_2022"
+	_ "github.com/neishewxn/sing-shadowsocks2/shadowstream"
 )
 
 type (

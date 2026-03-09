@@ -1,4 +1,4 @@
-module github.com/metacubex/sing-shadowsocks2
+module github.com/neishewxn/sing-shadowsocks2
 
 go 1.26
 
