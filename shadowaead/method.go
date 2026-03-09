@@ -16,15 +16,7 @@ import (
 	N "github.com/metacubex/sing/common/network"
 	"github.com/metacubex/sing/common/rw"
 
-	"github.com/RyuaNerin/go-krypto/lea"
-	"github.com/Yawning/aez"
-	"github.com/ericlagergren/aegis"
-	"github.com/ericlagergren/siv"
-	"github.com/metacubex/ascon"
 	"github.com/metacubex/chacha"
-	"github.com/oasisprotocol/deoxysii"
-	"github.com/sina-ghaderi/rabaead"
-	"gitlab.com/go-extension/aes-ccm"
 	"golang.org/x/crypto/chacha20poly1305"
 )
 
@@ -37,21 +29,6 @@ var MethodList = []string{
 	// began not standard methods
 	"chacha8-ietf-poly1305",
 	"xchacha8-ietf-poly1305",
-	"rabbit128-poly1305",
-	"aes-128-ccm",
-	"aes-192-ccm",
-	"aes-256-ccm",
-	"aes-128-gcm-siv",
-	"aes-256-gcm-siv",
-	"aegis-128l",
-	"aegis-256",
-	"aez-384",
-	"deoxys-ii-256-128",
-	"lea-128-gcm",
-	"lea-192-gcm",
-	"lea-256-gcm",
-	"ascon128",
-	"ascon128a",
 }
 
 func init() {
@@ -90,51 +67,6 @@ func NewMethod(methodName string, options C.MethodOptions) (*Method, error) {
 	case "xchacha8-ietf-poly1305":
 		m.keySaltLength = 32
 		m.constructor = chacha.NewXChaCha8IETFPoly1305
-	case "rabbit128-poly1305":
-		m.keySaltLength = 16
-		m.constructor = rabaead.NewAEAD
-	case "aes-128-ccm":
-		m.keySaltLength = 16
-		m.constructor = aeadCipher(aes.NewCipher, func(cipher cipher.Block) (cipher.AEAD, error) { return ccm.NewCCM(cipher) })
-	case "aes-192-ccm":
-		m.keySaltLength = 24
-		m.constructor = aeadCipher(aes.NewCipher, func(cipher cipher.Block) (cipher.AEAD, error) { return ccm.NewCCM(cipher) })
-	case "aes-256-ccm":
-		m.keySaltLength = 32
-		m.constructor = aeadCipher(aes.NewCipher, func(cipher cipher.Block) (cipher.AEAD, error) { return ccm.NewCCM(cipher) })
-	case "aes-128-gcm-siv":
-		m.keySaltLength = 16
-		m.constructor = siv.NewGCM
-	case "aes-256-gcm-siv":
-		m.keySaltLength = 32
-		m.constructor = siv.NewGCM
-	case "aegis-128l":
-		m.keySaltLength = 16
-		m.constructor = aegis.New
-	case "aegis-256":
-		m.keySaltLength = 32
-		m.constructor = aegis.New
-	case "aez-384":
-		m.keySaltLength = 3 * 16
-		m.constructor = aez.New
-	case "deoxys-ii-256-128":
-		m.keySaltLength = 32
-		m.constructor = deoxysii.New
-	case "lea-128-gcm":
-		m.keySaltLength = 16
-		m.constructor = aeadCipher(lea.NewCipher, cipher.NewGCM)
-	case "lea-192-gcm":
-		m.keySaltLength = 24
-		m.constructor = aeadCipher(lea.NewCipher, cipher.NewGCM)
-	case "lea-256-gcm":
-		m.keySaltLength = 32
-		m.constructor = aeadCipher(lea.NewCipher, cipher.NewGCM)
-	case "ascon128":
-		m.keySaltLength = 16
-		m.constructor = func(key []byte) (cipher.AEAD, error) { return ascon.New(key, ascon.Ascon128) }
-	case "ascon128a":
-		m.keySaltLength = 16
-		m.constructor = func(key []byte) (cipher.AEAD, error) { return ascon.New(key, ascon.Ascon128a) }
 	}
 	if len(options.Key) == m.keySaltLength {
 		m.key = options.Key
@@ -329,9 +261,6 @@ func (c *clientPacketConn) readPacket(buffer *buf.Buffer) (destination M.Socksad
 	}
 	buffer.Advance(c.method.keySaltLength)
 	buffer.Truncate(len(packet))
-	if err != nil {
-		return
-	}
 	destination, err = M.SocksaddrSerializer.ReadAddrPort(buffer)
 	if err != nil {
 		return

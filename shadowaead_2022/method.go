@@ -215,10 +215,7 @@ func (c *clientConn) writeRequest(payload []byte) error {
 	}
 	variableLengthHeaderLen += paddingLen
 	maxPayloadLen := requestBuffer.FreeLen() - (variableLengthHeaderLen + shadowio.Overhead)
-	payloadLen := len(payload)
-	if payloadLen > maxPayloadLen {
-		payloadLen = maxPayloadLen
-	}
+	payloadLen := min(len(payload), maxPayloadLen)
 	variableLengthHeaderLen += payloadLen
 	common.Must(binary.Write(fixedLengthBuffer, binary.BigEndian, uint16(variableLengthHeaderLen)))
 	writer.Encrypt(fixedLengthBuffer.Index(0), fixedLengthBuffer.Bytes())

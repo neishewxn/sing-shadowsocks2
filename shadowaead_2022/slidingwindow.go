@@ -44,10 +44,7 @@ func (f *SlidingWindow) Add(counter uint64) {
 	// Check if counter is ahead of window.
 	if counter > f.last {
 		lastBlockIndex := f.last >> swBlockBitLog
-		diff := int(blockIndex - lastBlockIndex)
-		if diff > swRingBlocks {
-			diff = swRingBlocks
-		}
+		diff := min(int(blockIndex-lastBlockIndex), swRingBlocks)
 
 		for i := 0; i < diff; i++ {
 			lastBlockIndex = (lastBlockIndex + 1) & swBlockMask
